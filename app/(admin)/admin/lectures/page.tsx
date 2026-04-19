@@ -1,7 +1,6 @@
 'use client';
 
 // app/(admin)/admin/lectures/page.tsx
-
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { LectureTable } from '@/components/admin/LectureTable';
@@ -14,30 +13,27 @@ export default function AdminLecturesPage() {
   const load = useCallback(async () => {
     setLoading(true);
     const res = await fetch('/api/lectures');
-    const data = await res.json();
-    setLectures(data);
+    setLectures(await res.json());
     setLoading(false);
   }, []);
 
   useEffect(() => { load(); }, [load]);
 
   return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Лекции</h1>
-        <Link
-          href="/admin/lectures/new"
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500"
-        >
-          + Добавить
-        </Link>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div className="admin-topbar">
+        <div>
+          <h1 className="admin-page-title">Лекции</h1>
+          <p className="admin-page-subtitle">Нажмите на статус для быстрой публикации</p>
+        </div>
+        <Link href="/admin/lectures/new" className="btn btn-primary" style={{ width: 'auto' }}>+ Добавить</Link>
       </div>
-
-      {loading ? (
-        <p className="text-gray-400 text-sm">Загрузка…</p>
-      ) : (
-        <LectureTable lectures={lectures} onRefresh={load} />
-      )}
+      {loading
+        ? <div className="admin-table-wrap" style={{ padding: '3rem', textAlign: 'center', color: 'var(--ink-3)' }}>Загрузка…</div>
+        : lectures.length === 0
+          ? <div className="admin-table-wrap" style={{ padding: '3rem', textAlign: 'center', color: 'var(--ink-3)' }}>Лекций пока нет.</div>
+          : <div className="admin-table-wrap"><LectureTable lectures={lectures} onRefresh={load} /></div>
+      }
     </div>
   );
 }

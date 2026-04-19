@@ -9,26 +9,45 @@ export default async function AdminTasksIndexPage() {
   const lectures = await getAllLectures();
 
   return (
-    <div className="space-y-5">
-      <h1 className="text-2xl font-bold text-gray-900">Задания</h1>
-      <p className="text-sm text-gray-500">Выберите лекцию для управления заданиями.</p>
-
-      <div className="space-y-2">
-        {lectures.map((l) => (
-          <Link
-            key={l.id}
-            href={`/admin/tasks/${l.id}`}
-            className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 hover:border-indigo-300 hover:shadow-sm transition"
-          >
-            <div>
-              <span className="text-sm font-medium text-gray-900">{l.title}</span>
-              <span className="ml-2 font-mono text-xs text-gray-400">{l.slug}</span>
-            </div>
-            <span className={`text-xs font-medium ${l.is_published ? 'text-green-600' : 'text-gray-400'}`}>
-              {l.is_published ? 'Опубликована' : 'Черновик'} →
-            </span>
-          </Link>
-        ))}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div className="admin-topbar">
+        <div>
+          <h1 className="admin-page-title">Задания</h1>
+          <p className="admin-page-subtitle">Выберите лекцию для управления заданиями</p>
+        </div>
+      </div>
+      <div className="admin-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Лекция</th>
+              <th style={{ width: '130px' }}>Статус</th>
+              <th style={{ width: '120px' }}>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lectures.map((l) => (
+              <tr key={l.id}>
+                <td style={{ color: 'var(--ink-3)', fontWeight: 600 }}>{l.order_index}</td>
+                <td>
+                  <span style={{ fontWeight: 500, color: 'var(--ink)' }}>{l.title}</span>
+                  <code style={{ marginLeft: '0.625rem', fontSize: '0.775rem', color: 'var(--ink-3)', background: 'var(--surface-2)', padding: '1px 5px', borderRadius: '3px' }}>{l.slug}</code>
+                </td>
+                <td>
+                  <span className={`badge ${l.is_published ? 'badge-done' : 'badge-new'}`}>
+                    {l.is_published ? '● Опубликована' : '○ Черновик'}
+                  </span>
+                </td>
+                <td>
+                  <Link href={`/admin/tasks/${l.id}`} className="btn btn-ghost btn-sm">
+                    Задания →
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

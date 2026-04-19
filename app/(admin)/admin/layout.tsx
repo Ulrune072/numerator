@@ -1,5 +1,4 @@
 // app/(admin)/admin/layout.tsx
-
 import Link from 'next/link';
 import { requireAdmin } from '@/lib/utils/auth';
 import { LogoutButton } from '@/components/auth/LogoutButton';
@@ -7,27 +6,46 @@ import { LogoutButton } from '@/components/auth/LogoutButton';
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   await requireAdmin();
 
+  const navItems = [
+    { href: '/admin',           label: 'Обзор',          icon: '⊞' },
+    { href: '/admin/lectures',  label: 'Лекции',         icon: '◧' },
+    { href: '/admin/tasks',     label: 'Задания',        icon: '✎' },
+    { href: '/admin/users',     label: 'Пользователи',   icon: '◉' },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-indigo-700 text-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-6">
-            <Link href="/admin" className="text-lg font-bold hover:text-indigo-200">
-              Числитель — Админ
+    <div className="admin-shell">
+      {/* Sidebar */}
+      <aside className="admin-sidebar">
+        <Link href="/admin" className="admin-sidebar-logo">
+          <span className="admin-sidebar-logo-text">Числ<span>и</span>тель</span>
+          <span className="admin-sidebar-logo-sub">Панель управления</span>
+        </Link>
+
+        <div style={{ flex: 1, paddingTop: '0.5rem' }}>
+          <p className="admin-nav-section">Контент</p>
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href} className="admin-nav-item">
+              <span className="admin-nav-item-icon">{item.icon}</span>
+              {item.label}
             </Link>
-            <nav className="flex gap-4 text-sm">
-              <Link href="/admin/lectures" className="hover:text-indigo-200">Лекции</Link>
-              <Link href="/admin/tasks" className="hover:text-indigo-200">Задания</Link>
-              <Link href="/admin/users" className="hover:text-indigo-200">Пользователи</Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4 text-sm">
-            <Link href="/dashboard" className="hover:text-indigo-200">← На сайт</Link>
-            <LogoutButton className="text-white hover:text-indigo-200 text-sm font-medium" />
+          ))}
+        </div>
+
+        <div className="admin-sidebar-footer">
+          <Link href="/dashboard" className="admin-nav-item" style={{ marginBottom: '0.25rem' }}>
+            <span className="admin-nav-item-icon">←</span>
+            На сайт
+          </Link>
+          <div className="admin-nav-item" style={{ padding: '0.5rem 0.875rem', margin: '0.125rem 0.5rem' }}>
+            <span className="admin-nav-item-icon">⎋</span>
+            <LogoutButton className="admin-nav-link" />
           </div>
         </div>
-      </header>
-      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+      </aside>
+
+      {/* Main content */}
+      <main className="admin-content">{children}</main>
     </div>
   );
 }

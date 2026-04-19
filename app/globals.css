@@ -59,6 +59,12 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; line-height: 1.25;
   border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-md);
 }
 
+/* Register two-column collapses to single on small screens */
+@media (max-width: 640px) {
+  .register-grid { grid-template-columns: 1fr !important; }
+  .register-left { display: none !important; }
+}
+
 .auth-logo { font-family: 'Unbounded', sans-serif; font-size: 1.375rem; font-weight: 900; color: var(--ink); letter-spacing: -0.02em; text-decoration: none; }
 .auth-logo span { color: var(--accent); }
 
@@ -128,12 +134,7 @@ h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; line-height: 1.25;
 .answer-btn.correct  .answer-letter { background: var(--success); border-color: var(--success); color: #fff; }
 .answer-btn.wrong    .answer-letter { background: var(--danger);  border-color: var(--danger);  color: #fff; }
 
-.admin-nav { background: var(--ink); border-bottom: 1px solid rgba(255,255,255,0.08); }
-.admin-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
-.admin-nav-logo { font-family: 'Unbounded', sans-serif; font-size: 0.875rem; font-weight: 900; color: #fff; text-decoration: none; letter-spacing: -0.01em; }
-.admin-nav-logo span { color: var(--accent); }
-.admin-nav-link { padding: 0.375rem 0.75rem; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.65); text-decoration: none; transition: all 0.15s; }
-.admin-nav-link:hover { background: rgba(255,255,255,0.1); color: #fff; }
+/* admin top nav removed — replaced by sidebar */
 
 .prose-content h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin: 1.75em 0 0.5em; }
 .prose-content h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin: 1.5em 0 0.4em; }
@@ -154,3 +155,123 @@ thead th { background: var(--surface-2); font-size: 0.8125rem; font-weight: 600;
 tbody td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-size: 0.9375rem; color: var(--ink-2); }
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: var(--surface-2); }
+
+/* ── Admin sidebar layout ────────────────────────────────── */
+.admin-shell { display: flex; min-height: 100vh; background: #F0EDE6; }
+
+.admin-sidebar {
+  width: 220px; flex-shrink: 0;
+  background: var(--ink);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
+}
+
+.admin-sidebar-logo {
+  padding: 1.5rem 1.25rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  text-decoration: none;
+  display: block;
+}
+
+.admin-sidebar-logo-text {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1rem; font-weight: 900;
+  color: #fff; letter-spacing: -0.02em;
+  display: block;
+}
+
+.admin-sidebar-logo-text span { color: var(--accent); }
+
+.admin-sidebar-logo-sub {
+  font-size: 0.6875rem; color: rgba(255,255,255,0.3);
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-top: 0.25rem; display: block;
+}
+
+.admin-nav-section {
+  padding: 1rem 0.75rem 0.25rem;
+  font-size: 0.6875rem; font-weight: 600;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+
+.admin-nav-item {
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.5rem 0.875rem;
+  margin: 0.125rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem; font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.admin-nav-item:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+.admin-nav-item.active { background: rgba(232,153,58,0.15); color: var(--accent); }
+
+.admin-nav-item-icon {
+  width: 18px; height: 18px; flex-shrink: 0;
+  opacity: 0.7; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-nav-item:hover .admin-nav-item-icon,
+.admin-nav-item.active .admin-nav-item-icon { opacity: 1; }
+
+.admin-sidebar-footer {
+  margin-top: auto;
+  padding: 1rem 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.admin-content { flex: 1; min-width: 0; padding: 2rem; }
+
+.admin-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2rem; gap: 1rem;
+}
+
+.admin-page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.625rem; font-weight: 600;
+  color: var(--ink); margin: 0;
+}
+
+.admin-page-subtitle {
+  font-size: 0.875rem; color: var(--ink-3);
+  margin: 0.2rem 0 0;
+}
+
+/* Admin stat cards */
+.admin-stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
+
+.admin-stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.25rem 1.5rem;
+  position: relative; overflow: hidden;
+  text-decoration: none; display: block;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.admin-stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+.admin-stat-card-accent {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.admin-stat-value {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 2rem; font-weight: 900; line-height: 1;
+  margin: 0.5rem 0 0.25rem;
+}
+
+.admin-stat-label {
+  font-size: 0.8125rem; color: var(--ink-3); font-weight: 500;
+}
+
+/* Admin table refinements */
+.admin-table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+.admin-table-wrap table { margin: 0; }
+.admin-table-wrap thead th { background: #F5F2EA; }
+.admin-table-wrap tbody tr:hover { background: #FAFAF7; }
