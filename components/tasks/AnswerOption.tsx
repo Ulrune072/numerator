@@ -12,31 +12,28 @@ interface Props {
 }
 
 export function AnswerOption({ index, text, selected, revealed, isCorrect, onSelect }: Props) {
-  let base =
-    'w-full rounded-lg border px-4 py-3 text-left text-sm transition focus:outline-none focus:ring-2 focus:ring-indigo-500';
+  let stateClass = '';
 
   if (!revealed) {
-    base += selected
-      ? ' border-indigo-500 bg-indigo-50 font-medium text-indigo-800'
-      : ' border-gray-200 bg-white hover:border-indigo-300 hover:bg-indigo-50';
+    if (selected) stateClass = 'selected';
   } else {
     if (isCorrect) {
-      base += ' border-green-500 bg-green-50 font-medium text-green-800 cursor-default';
+      stateClass = 'correct';
     } else if (selected) {
-      base += ' border-red-400 bg-red-50 text-red-800 cursor-default';
+      stateClass = 'wrong';
     } else {
-      base += ' border-gray-200 bg-white text-gray-400 cursor-default';
+      stateClass = 'dimmed';
     }
   }
 
   return (
     <button
       type="button"
-      className={base}
+      className={`answer-btn ${stateClass}`}
       disabled={revealed}
       onClick={() => onSelect(index)}
     >
-      <span className="mr-3 font-semibold">{String.fromCharCode(65 + index)}.</span>
+      <span className="answer-letter">{String.fromCharCode(65 + index)}</span>
       {text}
     </button>
   );

@@ -17,6 +17,17 @@ export function ResultsScreen({ lectureSlug, lectureTitle, results, totalQuestio
 
   return (
     <div style={{ maxWidth: '520px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+
+      {/* Header */}
+      <div style={{ textAlign: 'center', paddingTop: '0.5rem' }}>
+        <p style={{ fontSize: '0.8125rem', color: 'var(--ink-3)', fontWeight: 500, margin: '0 0 0.25rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+          Задания
+        </p>
+        <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: '1.375rem', fontWeight: 600, color: 'var(--ink)', margin: 0, lineHeight: 1.3 }}>
+          {lectureTitle}
+        </h1>
+      </div>
+
       <div className="card" style={{ padding: '2.5rem', textAlign: 'center' }}>
         <div style={{ fontSize: '3.5rem', marginBottom: '0.25rem', lineHeight: 1 }}>{isPerfect ? '🏆' : percent >= 60 ? '✨' : '📚'}</div>
         <div style={{ fontSize: '3rem', fontFamily: 'Unbounded, sans-serif', fontWeight: 900, color: 'var(--primary)', lineHeight: 1, marginBottom: '0.25rem' }}>

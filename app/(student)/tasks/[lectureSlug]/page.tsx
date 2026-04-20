@@ -18,7 +18,6 @@ export default async function TasksPage({ params }: Props) {
   const lecture = await getLectureBySlug(lectureSlug);
   if (!lecture) notFound();
 
-  // TASK-01: gate — student must have visited the lecture first
   const visited = await hasVisited(session.user.id, lectureSlug);
   if (!visited) redirect(`/lectures/${lectureSlug}`);
 
@@ -32,23 +31,15 @@ export default async function TasksPage({ params }: Props) {
     );
   }
 
-  // Determine if this is a retry (TASK-08/10)
   const best = await getBestResult(session.user.id, lecture.id);
   const isRetry = best.correct > 0 || best.total > 0;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Задания</h1>
-        <p className="mt-1 text-sm text-gray-500">{lecture.title}</p>
-      </div>
-
-      <TasksRunner
-        tasks={tasks}
-        lectureSlug={lectureSlug}
-        lectureTitle={lecture.title}
-        isRetry={isRetry}
-      />
-    </div>
+    <TasksRunner
+      tasks={tasks}
+      lectureSlug={lectureSlug}
+      lectureTitle={lecture.title}
+      isRetry={isRetry}
+    />
   );
 }
