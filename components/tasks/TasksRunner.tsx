@@ -11,9 +11,10 @@ interface Props {
   lectureSlug: string;
   lectureTitle: string;
   isRetry: boolean;
+  lectureId: string;
 }
 
-export function TasksRunner({ tasks, lectureSlug, lectureTitle, isRetry }: Props) {
+export function TasksRunner({ tasks, lectureSlug, lectureTitle, isRetry, lectureId }: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [results, setResults] = useState<AttemptResultDTO[]>([]);
   const [finished, setFinished] = useState(false);
@@ -24,6 +25,12 @@ export function TasksRunner({ tasks, lectureSlug, lectureTitle, isRetry }: Props
     const updated = [...results, result];
     setResults(updated);
     if (currentIndex + 1 >= tasks.length) {
+      const scoreEarned = updated[updated.length - 1].total_score;
+      fetch(`/api/progress/${lectureSlug}/complete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lectureId, scoreEarned }),
+      }).catch(() => {});
       setFinished(true);
     } else {
       setCurrentIndex(currentIndex + 1);

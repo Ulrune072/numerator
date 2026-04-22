@@ -3,7 +3,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { requireAuth } from '@/lib/utils/auth';
 import { getLectureBySlug } from '@/lib/services/lectures';
-import { hasVisited, getBestResult } from '@/lib/services/progress';
+import { hasVisited, getBestResult, hasAttempted } from '@/lib/services/progress';
 import { getTasksForStudent } from '@/lib/services/tasks';
 import { TasksRunner } from '@/components/tasks/TasksRunner';
 
@@ -25,21 +25,28 @@ export default async function TasksPage({ params }: Props) {
 
   if (tasks.length === 0) {
     return (
-      <div className="text-center text-gray-500 py-16">
-        К этой лекции ещё нет заданий.
+      <div className="page-narrow">
+        <div className="card" style={{ padding: '3rem', textAlign: 'center', color: 'var(--ink-3)' }}>
+          К этой лекции ещё нет заданий.
+        </div>
       </div>
     );
   }
 
-  const best = await getBestResult(session.user.id, lecture.id);
-  const isRetry = best.correct > 0 || best.total > 0;
+  const [best, isRetry] = await Promise.all([
+    getBestResult(session.user.id, lecture.id),
+    hasAttempted(session.user.id, lecture.id),
+  ]);
 
   return (
-    <TasksRunner
-      tasks={tasks}
-      lectureSlug={lectureSlug}
-      lectureTitle={lecture.title}
-      isRetry={isRetry}
-    />
+    <div className="page-narrow">
+      <TasksRunner
+        tasks={tasks}
+        lectureSlug={lectureSlug}
+        lectureTitle={lecture.title}
+        isRetry={isRetry}
+        lectureId={lecture.id}
+      />
+    </div>
   );
 }

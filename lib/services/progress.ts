@@ -88,6 +88,16 @@ export async function getAttemptsByLecture(
   return data ?? [];
 }
 
+export async function hasAttempted(userId: string, lectureId: string): Promise<boolean> {
+  const supabase = createClient();
+  const { count } = await supabase
+    .from('task_attempts')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('lecture_id', lectureId);
+  return (count ?? 0) > 0;
+}
+
 export async function getBestResult(
   userId: string,
   lectureId: string,
