@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: { name: string; value: string; options?: object }[]) {
           // Write cookies both on the request (so later handlers see them)
           // and on the response (so the browser receives them).
           cookiesToSet.forEach(({ name, value }) =>
