@@ -1,11 +1,9 @@
 // app/(student)/diagnostic/page.tsx
-// DIAG-01–03: Intro + embedded Google Form.
-// After submission the user clicks "Посмотреть результат" and is
-// redirected to /diagnostic/results where their score is shown.
+// DIAG-01–03: Intro text + embedded Google Form iframe.
 
 import { requireAuth } from '@/lib/utils/auth';
-import Link from 'next/link';
 
+// Replace this URL with the actual published Google Form embed link.
 const GOOGLE_FORM_URL =
   process.env.NEXT_PUBLIC_DIAGNOSTIC_FORM_URL ??
   'https://docs.google.com/forms/d/e/PLACEHOLDER/viewform?embedded=true';
@@ -37,19 +35,6 @@ export default async function DiagnosticPage() {
         >
           Загрузка…
         </iframe>
-      </div>
-
-      {/* After submitting the form, user clicks this to see their result */}
-      <div className="rounded-xl border border-blue-100 bg-blue-50 p-4 flex items-center justify-between">
-        <p className="text-sm text-blue-800">
-          Уже отправили форму? Посмотрите свой результат и рекомендованный уровень.
-        </p>
-        <Link
-          href="/diagnostic/results"
-          className="ml-4 shrink-0 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
-        >
-          Посмотреть результат →
-        </Link>
       </div>
     </div>
   );

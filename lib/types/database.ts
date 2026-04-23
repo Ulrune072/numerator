@@ -23,6 +23,7 @@ export interface Lecture {
   content_html: string | null;
   order_index: number;
   is_published: boolean;
+  min_score: number;
   created_at: string;
 }
 
@@ -66,6 +67,8 @@ export interface LectureListItem {
   description: string | null;
   order_index: number;
   is_published: boolean;
+  min_score: number;
+  locked: boolean;
   visited: boolean;
   completed: boolean;
 }
@@ -83,6 +86,7 @@ export interface CreateLectureDTO {
   content_html?: string;
   order_index: number;
   is_published: boolean;
+  min_score: number;
 }
 
 export interface CreateTaskDTO {

@@ -14,9 +14,12 @@ export default async function DashboardPage() {
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single<Profile>();
   if (!profile) return null;
 
-  const lectures = await getPublishedLectures(session.user.id);
-  const bestResults = await Promise.all(lectures.map((l) => getBestResult(session.user.id, l.id)));
-  const completedCount = lectures.filter((l) => l.completed).length;
+  const lectures = await getPublishedLectures(session.user.id, profile.total_score);
+  const unlockedLectures = lectures.filter((l) => !l.locked);
+  const lockedLectures   = lectures.filter((l) =>  l.locked);
+
+  const bestResults = await Promise.all(unlockedLectures.map((l) => getBestResult(session.user.id, l.id)));
+  const completedCount = unlockedLectures.filter((l) => l.completed).length;
 
   return (
     <div className="page">
@@ -41,10 +44,10 @@ export default async function DashboardPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', color: 'rgba(255,255,255,0.45)' }}>
               <span>Прогресс</span>
-              <span>{completedCount} из {lectures.length} лекций</span>
+              <span>{completedCount} из {unlockedLectures.length} доступных лекций</span>
             </div>
             <div style={{ height: '6px', background: 'rgba(255,255,255,0.12)', borderRadius: '99px', overflow: 'hidden' }}>
-              <div style={{ height: '100%', background: 'linear-gradient(90deg, var(--accent) 0%, #f0b85a 100%)', borderRadius: '99px', width: `${lectures.length ? Math.round((completedCount / lectures.length) * 100) : 0}%`, transition: 'width 0.5s' }} />
+              <div style={{ height: '100%', background: 'linear-gradient(90deg, var(--accent) 0%, #f0b85a 100%)', borderRadius: '99px', width: `${unlockedLectures.length ? Math.round((completedCount / unlockedLectures.length) * 100) : 0}%`, transition: 'width 0.5s' }} />
             </div>
           </div>
         </div>
@@ -55,20 +58,20 @@ export default async function DashboardPage() {
           <ProgressBar totalScore={profile.total_score} />
         </div>
 
-        {/* Lectures list */}
+        {/* Unlocked lectures */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
             <h2 style={{ fontSize: '1.125rem', margin: 0 }}>Мои лекции</h2>
             <Link href="/lectures" className="btn btn-ghost btn-sm">Все лекции →</Link>
           </div>
 
-          {lectures.length === 0 ? (
+          {unlockedLectures.length === 0 ? (
             <div className="card" style={{ padding: '2rem', textAlign: 'center', color: 'var(--ink-3)' }}>
               Лекции пока не опубликованы.
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {lectures.map((lecture, i) => {
+              {unlockedLectures.map((lecture, i) => {
                 const best = bestResults[i];
                 return (
                   <div key={lecture.id} className="card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
@@ -96,6 +99,36 @@ export default async function DashboardPage() {
             </div>
           )}
         </div>
+
+        {/* Locked lectures */}
+        {lockedLectures.length > 0 && (
+          <div>
+            <h2 style={{ fontSize: '1.125rem', margin: '0 0 1rem' }}>
+              🔒 Закрытые лекции
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {lockedLectures.map((lecture) => (
+                <div key={lecture.id} className="card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', opacity: 0.65 }}>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={{ fontWeight: 500, color: 'var(--ink-3)', fontSize: '0.9375rem', margin: 0 }}>
+                      {lecture.title}
+                    </p>
+                  </div>
+                  <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.8125rem', color: 'var(--accent)', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                      Нужно {lecture.min_score} б.
+                    </span>
+                    <span className="badge badge-new">Закрыто</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Motivational hint */}
+            <p style={{ fontSize: '0.8125rem', color: 'var(--ink-3)', margin: '0.75rem 0 0', textAlign: 'center' }}>
+              Выполняйте задания, чтобы открыть новые лекции
+            </p>
+          </div>
+        )}
 
         {/* Quick nav */}
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>

@@ -19,6 +19,7 @@ export function LectureEditor({ lecture, nextOrderIndex = 1 }: Props) {
     content_html: lecture?.content_html ?? '',
     order_index: lecture?.order_index ?? nextOrderIndex,
     is_published: lecture?.is_published ?? false,
+    min_score: lecture?.min_score ?? 0,
   });
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -136,6 +137,56 @@ export function LectureEditor({ lecture, nextOrderIndex = 1 }: Props) {
               onChange={(e) => set('description', e.target.value)}
               className="field-input"
             />
+          </div>
+
+          {/* Min score requirement */}
+          <div style={{
+            padding: '1rem 1.125rem',
+            background: form.min_score > 0 ? 'var(--accent-bg)' : 'var(--surface-2)',
+            border: `1.5px solid ${form.min_score > 0 ? 'rgba(232,153,58,0.3)' : 'var(--border)'}`,
+            borderRadius: 'var(--radius)',
+            transition: 'all 0.2s',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+              <div>
+                <p style={{ margin: 0, fontWeight: 600, fontSize: '0.9375rem', color: form.min_score > 0 ? '#b5700a' : 'var(--ink-2)' }}>
+                  Минимальный балл для доступа
+                </p>
+                <p style={{ margin: '0.125rem 0 0', fontSize: '0.8125rem', color: 'var(--ink-3)' }}>
+                  {form.min_score > 0
+                    ? `Лекция закрыта до ${form.min_score} баллов`
+                    : 'Открыта для всех студентов'}
+                </p>
+              </div>
+              <input
+                type="number"
+                value={form.min_score}
+                min={0}
+                step={10}
+                onChange={(e) => set('min_score', Number(e.target.value))}
+                className="field-input"
+                style={{ width: '100px', textAlign: 'center', fontWeight: 600, flexShrink: 0 }}
+              />
+            </div>
+            <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                {[0, 100, 300, 600, 1000].map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => set('min_score', v)}
+                    className="btn btn-sm"
+                    style={{
+                      background: form.min_score === v ? 'var(--accent)' : 'var(--surface)',
+                      color: form.min_score === v ? '#fff' : 'var(--ink-3)',
+                      border: '1px solid var(--border-2)',
+                      fontSize: '0.75rem',
+                      padding: '0.25rem 0.625rem',
+                    }}
+                  >
+                    {v === 0 ? 'Открыто' : `${v} б.`}
+                  </button>
+                ))}
+              </div>
           </div>
 
           {/* Publish toggle */}

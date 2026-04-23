@@ -10,13 +10,13 @@ import type {
 
 // ── Student ──────────────────────────────────────────────────────────────────
 
-export async function getPublishedLectures(userId: string): Promise<LectureListItem[]> {
+export async function getPublishedLectures(userId: string, userScore: number = 0): Promise<LectureListItem[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from('lectures')
     .select(`
-      id, slug, title, description, order_index, is_published,
+      id, slug, title, description, order_index, is_published, min_score,
       user_progress!left ( visited, completed )
     `)
     .eq('is_published', true)
@@ -36,6 +36,8 @@ export async function getPublishedLectures(userId: string): Promise<LectureListI
       description: row.description,
       order_index: row.order_index,
       is_published: row.is_published,
+      min_score: row.min_score ?? 0,
+      locked: (row.min_score ?? 0) > userScore,
       visited: progress?.visited ?? false,
       completed: progress?.completed ?? false,
     };
@@ -54,6 +56,11 @@ export async function getLectureBySlug(slug: string): Promise<Lecture | null> {
 
   if (error) return null;
   return data;
+}
+
+/** Returns true if user's score is below the lecture's min_score requirement. */
+export function isLocked(lecture: Lecture, userScore: number): boolean {
+  return (lecture.min_score ?? 0) > userScore;
 }
 
 // ── Admin ─────────────────────────────────────────────────────────────────────
