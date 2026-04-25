@@ -26,14 +26,14 @@ export default async function DashboardPage() {
       <div style={{ display: 'grid', gap: '1.5rem' }}>
 
         {/* Hero card */}
-        <div className="card" style={{ padding: '2rem', background: 'linear-gradient(135deg, var(--ink) 0%, #2D3F6E 100%)', border: 'none', color: '#fff', position: 'relative', overflow: 'hidden' }}>
+        <div className="card" style={{ padding: '2rem', background: 'linear-gradient(135deg, var(--ink) 0%, #4A3FA0 100%)', border: 'none', color: '#fff', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(232,153,58,0.12)', pointerEvents: 'none' }} />
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.5rem' }}>
             <div>
               <p style={{ fontSize: '0.8125rem', color: 'rgba(255,255,255,0.5)', marginBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Добро пожаловать</p>
               <h1 style={{ fontSize: '1.75rem', fontFamily: 'Playfair Display, serif', margin: 0, color: '#fff' }}>{profile.username}</h1>
             </div>
-            <div style={{ background: 'rgba(232,153,58,0.2)', border: '1px solid rgba(232,153,58,0.35)', borderRadius: '99px', padding: '0.375rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--accent)' }}>
+            <div style={{ background: 'rgba(232,153,58,0.18)', border: '1px solid rgba(232,153,58,0.35)', borderRadius: '99px', padding: '0.375rem 1rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--accent)' }}>
               {getBadgeLabel(profile.total_score)}
             </div>
           </div>
